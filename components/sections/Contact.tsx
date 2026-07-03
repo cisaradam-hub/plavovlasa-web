@@ -75,7 +75,7 @@ export default function Contact() {
               E-mail
             </p>
             <a
-              href="mailto:hello@plavovlasa.com"
+              href="mailto:hello@plavovlasa.sk"
               style={{
                 fontFamily:    'var(--font-serif)',
                 fontSize:      'var(--text-heading)',
@@ -88,8 +88,7 @@ export default function Contact() {
               onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = '0.65' }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = '1' }}
             >
-              {/* TODO: nahradiť skutočným emailom */}
-              hello@plavovlasa.com
+              hello@plavovlasa.sk
             </a>
           </div>
 
