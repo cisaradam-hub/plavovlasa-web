@@ -187,7 +187,7 @@ export default function Hero() {
     const speed = Math.sqrt(dx * dx + dy * dy)
     if (speed < 0.8) return
 
-    const radius   = 44
+    const radius   = 24
     const strength = Math.min(speed * 0.55, 16)
     const nx = dx / speed
     const ny = dy / speed
