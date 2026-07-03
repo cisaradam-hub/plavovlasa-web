@@ -41,6 +41,7 @@ export default function Hero() {
   const canvas1Ref    = useRef<HTMLCanvasElement>(null)
   const canvas2Ref    = useRef<HTMLCanvasElement>(null)
   const bufferRef     = useRef<HTMLCanvasElement | null>(null)
+  const patchRef      = useRef<HTMLCanvasElement | null>(null)
 
   const imagesRef     = useRef<HTMLImageElement[]>([])
   const currentIdxRef = useRef(0)
@@ -159,6 +160,9 @@ export default function Hero() {
           bufferRef.current = document.createElement('canvas')
           bufferRef.current.width  = c1.width
           bufferRef.current.height = c1.height
+          patchRef.current = document.createElement('canvas')
+          patchRef.current.width  = 80
+          patchRef.current.height = 80
           gsap.fromTo(wrapper, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.4, ease: 'expo.out' })
 
           // No auto-advance — manual navigation only
@@ -177,10 +181,12 @@ export default function Hero() {
   const smear = useCallback((x: number, y: number, px: number, py: number) => {
     const canvas = canvas1Ref.current
     const buffer = bufferRef.current
-    if (!canvas || !buffer) return
+    const patch  = patchRef.current
+    if (!canvas || !buffer || !patch) return
     const ctx  = canvas.getContext('2d')
     const bCtx = buffer.getContext('2d')
-    if (!ctx || !bCtx) return
+    const pCtx = patch.getContext('2d')
+    if (!ctx || !bCtx || !pCtx) return
 
     const dx    = x - px
     const dy    = y - py
@@ -191,19 +197,29 @@ export default function Hero() {
     const strength = Math.min(speed * 0.55, 16)
     const nx = dx / speed
     const ny = dy / speed
+    const destX = x + nx * strength
+    const destY = y + ny * strength
+    const half  = patch.width / 2
 
     bCtx.drawImage(canvas, 0, 0)
 
-    ctx.save()
-    ctx.beginPath()
-    ctx.arc(x + nx * strength, y + ny * strength, radius, 0, Math.PI * 2)
-    ctx.clip()
-    ctx.drawImage(
-      buffer,
-      x - radius, y - radius, radius * 2, radius * 2,
-      x - radius + nx * strength, y - radius + ny * strength, radius * 2, radius * 2,
-    )
-    ctx.restore()
+    // Draw source area from buffer into small patch canvas
+    pCtx.clearRect(0, 0, patch.width, patch.height)
+    pCtx.drawImage(buffer, x - half, y - half, patch.width, patch.height, 0, 0, patch.width, patch.height)
+
+    // Feathered circular mask via radial gradient + destination-in
+    pCtx.globalCompositeOperation = 'destination-in'
+    const grad = pCtx.createRadialGradient(half, half, 0, half, half, radius)
+    grad.addColorStop(0,    'rgba(0,0,0,1)')
+    grad.addColorStop(0.5,  'rgba(0,0,0,0.9)')
+    grad.addColorStop(0.8,  'rgba(0,0,0,0.4)')
+    grad.addColorStop(1,    'rgba(0,0,0,0)')
+    pCtx.fillStyle = grad
+    pCtx.fillRect(0, 0, patch.width, patch.height)
+    pCtx.globalCompositeOperation = 'source-over'
+
+    // Composite feathered patch onto main canvas at destination
+    ctx.drawImage(patch, destX - half, destY - half)
   }, [])
 
   // ── Pointer events ────────────────────────────────────────────────────────────
