@@ -15,7 +15,16 @@
 
 # next.js
 /.next/
+.next 2/
 /out/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# iCloud duplicates
+* 2/
+* 2.json
+* 3.json
 
 # production
 /build
