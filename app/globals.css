@@ -1,0 +1,376 @@
+@import "tailwindcss";
+
+/* ─── DESIGN TOKENS ─── */
+:root {
+  /* COLOR */
+  --color-background:     #F5F2EC;
+  --color-surface:        #EDEAE2;
+  --color-dark:           #1A1A16;
+  --color-text-primary:   #1A1A16;
+  --color-text-secondary: #4A4A42;
+  --color-text-tertiary:  #9A9A8E;
+  --color-text-on-dark:   #F5F2EC;
+  --color-border:         rgba(26, 26, 22, 0.12);
+  --color-accent:         #002FA7;
+
+  /* TYPOGRAPHY */
+  --font-serif:    'Geist Mono', 'Courier New', monospace;
+  --font-sans:     'DM Sans', 'Helvetica Neue', sans-serif;
+  --font-mono:     'Space Mono', 'Courier New', monospace;
+  --font-display:  'Geist Mono', 'Courier New', monospace;
+
+  /* TYPE SCALE */
+  --text-display-xl:  clamp(64px, 10vw, 140px);
+  --text-display-lg:  clamp(48px, 7vw, 96px);
+  --text-display-md:  clamp(32px, 5vw, 68px);
+  --text-heading:     clamp(22px, 2.8vw, 36px);
+  --text-subheading:  clamp(17px, 1.8vw, 24px);
+  --text-body:        clamp(15px, 1.1vw, 18px);
+  --text-caption:     clamp(11px, 0.9vw, 13px);
+  --text-micro:       clamp(9px, 0.7vw, 11px);
+
+  /* LEADING */
+  --leading-display: 0.92;
+  --leading-heading: 1.1;
+  --leading-body:    1.7;
+  --leading-loose:   1.9;
+
+  /* TRACKING */
+  --tracking-tight:      -0.02em;
+  --tracking-normal:      0;
+  --tracking-small-caps:  0.12em;
+  --tracking-wide:        0.08em;
+  --tracking-extreme:     0.25em;
+
+  /* SPACING */
+  --space-xs:   8px;
+  --space-sm:   16px;
+  --space-md:   32px;
+  --space-lg:   64px;
+  --space-xl:   96px;
+  --space-2xl:  128px;
+  --space-3xl:  192px;
+  --space-4xl:  256px;
+  --space-5xl:  320px;
+
+  /* LAYOUT */
+  --container-max:   1440px;
+  --margin-desktop:  32px;
+  --margin-tablet:   24px;
+  --margin-mobile:   16px;
+  --gutter:          24px;
+
+  /* MOTION */
+  --ease-out-expo:      cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-expo:       cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-inout:         cubic-bezier(0.87, 0, 0.13, 1);
+  --duration-fast:      0.3s;
+  --duration-base:      0.6s;
+  --duration-slow:      0.9s;
+  --duration-cinematic: 1.2s;
+}
+
+/* ─── BASE RESET ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+}
+
+/* ─── TYPOGRAPHY CLASSES ─── */
+.display-xl {
+  font-family: var(--font-display);
+  font-size: var(--text-display-xl);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: none;
+}
+
+.display-lg {
+  font-family: var(--font-display);
+  font-size: var(--text-display-lg);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: none;
+}
+
+.display-md {
+  font-family: var(--font-display);
+  font-size: var(--text-display-md);
+  line-height: 1.1;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: none;
+}
+
+/* Mono label — Space Mono uppercase, replaces old small-caps in key places */
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-small-caps);
+  text-transform: none;
+  font-weight: 400;
+}
+
+.small-caps {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  letter-spacing: var(--tracking-small-caps);
+  text-transform: none;
+  font-weight: 400;
+}
+
+.body-text {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-text-secondary);
+  max-width: 58ch;
+}
+
+.caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-caption);
+  line-height: var(--leading-body);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--tracking-wide);
+}
+
+/* ─── BUTTON ─── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  color: var(--color-background);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 100px;
+  padding: 14px 28px;
+  cursor: none;
+  text-decoration: none;
+  transition: background 0.3s var(--ease-out-expo), transform 0.2s var(--ease-out-expo);
+}
+.btn-primary:hover {
+  background: #001d6e;
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: none;
+  color: var(--color-text-primary);
+  background: transparent;
+  border: 1px solid var(--color-text-primary);
+  border-radius: 100px;
+  padding: 14px 28px;
+  cursor: none;
+  text-decoration: none;
+  transition: background 0.3s var(--ease-out-expo), color 0.3s, transform 0.2s var(--ease-out-expo);
+}
+.btn-outline:hover {
+  background: var(--color-text-primary);
+  color: var(--color-background);
+  transform: translateY(-1px);
+}
+
+/* ─── CURSOR ─── */
+@media (hover: hover) and (pointer: fine) {
+  * { cursor: none !important; }
+}
+
+/* ─── REDUCED MOTION ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── GRAIN OVERLAY ─── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+}
+
+/* ─── LENIS ─── */
+html.lenis { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto; }
+
+/* ─── SCROLL PROGRESS ─── */
+.scroll-progress-track {
+  position: fixed;
+  left: 20px;
+  top: 0;
+  width: 1px;
+  height: 100vh;
+  background-color: var(--color-border);
+  z-index: 50;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.scroll-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 0;
+  background-color: var(--color-accent);
+  transition: height 0.05s linear;
+}
+
+@media (max-width: 768px) {
+  .scroll-progress-track { display: none; }
+}
+
+/* ─── SECTION STACKING ─── */
+main > section,
+main > footer {
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+}
+
+#portfolio {
+  overflow: hidden;
+}
+
+/* ─── RESPONSIVE ─── */
+
+/* Tablet (≤ 1024 px) */
+@media (max-width: 1024px) {
+  #sluzby > div > div:last-child {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  #cennik > div {
+    grid-template-columns: 1fr !important;
+  }
+  #cennik > div > div:first-child {
+    margin-bottom: var(--space-lg);
+  }
+}
+
+/* Mobile (≤ 768 px) */
+@media (max-width: 768px) {
+  #o-mne > div,
+  #sluzby > div,
+  #portfolio > div,
+  #recenzie > div,
+  #cennik > div,
+  #kontakt > div {
+    padding-left:  var(--margin-mobile) !important;
+    padding-right: var(--margin-mobile) !important;
+  }
+
+  #o-mne > div {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-xl) !important;
+  }
+
+  #sluzby > div > div:last-child {
+    grid-template-columns: 1fr !important;
+  }
+
+  #portfolio > div > div:last-child {
+    columns: 1 !important;
+  }
+
+  #recenzie blockquote > p {
+    font-size: clamp(18px, 5vw, 26px) !important;
+    line-height: 1.35 !important;
+  }
+
+  #cennik > div {
+    grid-template-columns: 1fr !important;
+  }
+  #cennik span {
+    white-space: normal !important;
+  }
+
+  #kontakt > div {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-xl) !important;
+  }
+  #kontakt h2 {
+    font-size: clamp(32px, 9vw, 52px) !important;
+  }
+
+  section[style*="minHeight: 100svh"] > div:last-of-type {
+    width: 90% !important;
+    padding: var(--space-lg) var(--margin-mobile) !important;
+  }
+}
+
+/* ─── IMAGE UTILITIES ─── */
+.img-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.img-wrapper {
+  overflow: hidden;
+  border-radius: 0;
+}
+
+/* ─── UNDERLINE DRAW ANIMATION ─── */
+.underline-draw {
+  position: relative;
+  text-decoration: none;
+}
+
+.underline-draw::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--color-accent);
+  transition: width 0.4s var(--ease-out-expo);
+}
+
+.underline-draw:hover::after {
+  width: 100%;
+}

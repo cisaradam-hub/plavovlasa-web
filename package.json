@@ -1,0 +1,26 @@
+{
+  "name": "plavovlasa-init",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently --names \"next,img\" -c \"cyan,green\" \"next dev\" \"node scripts/watch-compress.mjs\"",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@studio-freight/lenis": "^1.0.42",
+    "gsap": "^3.15.0",
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^10.0.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
