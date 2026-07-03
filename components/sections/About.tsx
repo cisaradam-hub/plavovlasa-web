@@ -37,7 +37,7 @@ export default function About() {
         <div
           ref={imgRef}
           className="about-img"
-          style={{ overflow: 'hidden', opacity: 0, aspectRatio: '1 / 1' }}
+          style={{ overflow: 'hidden', opacity: 0, aspectRatio: '3 / 4' }}
         >
           <Image
             src="/images/about.jpg"
