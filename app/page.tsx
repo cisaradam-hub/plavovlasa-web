@@ -1,3 +1,4 @@
+'use client'
 // COMING SOON MODE — uncomment the original below to restore the full site
 
 export default function Home() {
