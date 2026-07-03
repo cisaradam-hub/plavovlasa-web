@@ -410,7 +410,7 @@ export default function Hero() {
             max-width: 100% !important;
           }
           .hero-text-zone h1 {
-            font-size: clamp(32px, 8.5vw, 44px) !important;
+            font-size: clamp(26px, 6.5vw, 36px) !important;
           }
           .hero-arrow {
             width:  36px !important;
