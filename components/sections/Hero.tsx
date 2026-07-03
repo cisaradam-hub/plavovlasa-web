@@ -218,6 +218,10 @@ export default function Hero() {
     }
     const onMove = (e: MouseEvent | TouchEvent) => {
       if (!dragging.current) return
+      if ('touches' in e) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
       const rect = canvas.getBoundingClientRect()
       const { x, y } = getEventXY(e, rect)
       smear(x, y, lastPos.current.x, lastPos.current.y)
@@ -230,7 +234,7 @@ export default function Hero() {
     canvas.addEventListener('mouseup',    onUp)
     canvas.addEventListener('mouseleave', onUp)
     canvas.addEventListener('touchstart', onDown as EventListener, { passive: true })
-    canvas.addEventListener('touchmove',  onMove as EventListener, { passive: true })
+    canvas.addEventListener('touchmove',  onMove as EventListener, { passive: false })
     canvas.addEventListener('touchend',   onUp)
 
     return () => {
