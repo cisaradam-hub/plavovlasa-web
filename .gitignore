@@ -26,6 +26,9 @@
 * 2.json
 * 3.json
 
+# Figma plugin folder
+/plavovlasa-web/
+
 # production
 /build
 
