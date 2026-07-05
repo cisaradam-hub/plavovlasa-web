@@ -155,14 +155,15 @@ export default function Hero() {
       resize()
     }
 
-    let loadedCount = 0
+    let canvasReady = false
     HERO_IMAGES.forEach((src, i) => {
       const img = new window.Image()
       imagesRef.current[i] = img
 
       const handleLoad = () => {
-        loadedCount++
-        if (loadedCount === 1) {
+        // Set up canvas once on first image to arrive (any index)
+        if (!canvasReady) {
+          canvasReady = true
           resize()
           bufferRef.current = document.createElement('canvas')
           bufferRef.current.width  = c1.width
@@ -170,6 +171,14 @@ export default function Hero() {
           patchRef.current = document.createElement('canvas')
           patchRef.current.width  = 80
           patchRef.current.height = 80
+        }
+        // Reveal hero only when the currently displayed image (index 0) loads
+        if (i === currentIdxRef.current) {
+          const ctx1 = c1.getContext('2d')
+          if (ctx1 && c1.width > 0 && c1.height > 0) {
+            ctx1.clearRect(0, 0, c1.width, c1.height)
+            drawImageCover(ctx1, img, c1.width, c1.height)
+          }
           gsap.fromTo(wrapper, { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'expo.out' })
         }
       }
