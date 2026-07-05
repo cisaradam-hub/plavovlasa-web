@@ -152,8 +152,8 @@ export default function Hero() {
     HERO_IMAGES.forEach((src, i) => {
       const img = new window.Image()
       imagesRef.current[i] = img
-      img.src = src
-      img.onload = () => {
+
+      const handleLoad = () => {
         loadedCount++
         if (loadedCount === 1) {
           resize()
@@ -164,9 +164,15 @@ export default function Hero() {
           patchRef.current.width  = 80
           patchRef.current.height = 80
           gsap.fromTo(wrapper, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.4, ease: 'expo.out' })
-
-          // No auto-advance — manual navigation only
         }
+      }
+
+      img.onload = handleLoad
+      img.src = src
+      // If already cached, onload won't fire — handle manually
+      if (img.complete && img.naturalWidth > 0) {
+        img.onload = null
+        handleLoad()
       }
     })
 
