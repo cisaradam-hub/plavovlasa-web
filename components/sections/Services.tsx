@@ -66,15 +66,8 @@ export default function Services() {
           ref={headingRef}
           style={{ marginBottom: 'calc(var(--space-2xl) * 0.5)' }}
         >
-          <p
-            data-line
-            className="small-caps"
-            style={{ color: 'var(--color-text-tertiary)', marginBottom: 'var(--space-xs)' }}
-          >
-            Služby
-          </p>
           <h2 data-line style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(22px, 2.8vw, 40px)', fontWeight: 400, letterSpacing: '-0.02em', lineHeight: 1.05, color: 'var(--color-text-primary)' }}>
-            Čo pre vás môžem urobiť
+            Služby
           </h2>
         </div>
 
