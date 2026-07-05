@@ -44,7 +44,6 @@ export default function Hero() {
 
   const imagesRef     = useRef<HTMLImageElement[]>([])
   const currentIdxRef = useRef(0)
-  const userPausedRef = useRef(false)
   const intervalRef   = useRef<ReturnType<typeof setInterval> | null>(null)
   const transitingRef = useRef(false)
 
@@ -76,7 +75,6 @@ export default function Hero() {
     if (idx === currentIdxRef.current) return
 
     transitingRef.current = true
-
     const ctx2 = c2.getContext('2d')
     if (!ctx2) return
 
@@ -105,13 +103,11 @@ export default function Hero() {
   }, [])
 
   const next = useCallback(() => {
-    userPausedRef.current = true
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null }
     goTo((currentIdxRef.current + 1) % HERO_IMAGES.length)
   }, [goTo])
 
   const prev = useCallback(() => {
-    userPausedRef.current = true
     if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null }
     goTo((currentIdxRef.current - 1 + HERO_IMAGES.length) % HERO_IMAGES.length)
   }, [goTo])
@@ -121,24 +117,20 @@ export default function Hero() {
     const c1      = canvas1Ref.current
     const c2      = canvas2Ref.current
     const wrapper = wrapperRef.current
-    const section = sectionRef.current
-    if (!c1 || !c2 || !wrapper || !section) return
+    if (!c1 || !c2 || !wrapper) return
 
     const ctx1 = c1.getContext('2d')
     if (!ctx1) return
 
-    // Lock section height to initial window.innerHeight.
-    // iOS toolbar show/hide changes window.innerHeight, which would resize the canvas
-    // (via the 100% CSS chain) and cause the image to appear zoomed. By locking
-    // to a pixel value, the height stays stable during scroll.
-    section.style.height = `${window.innerHeight}px`
-
+    // 100svh (small viewport height) is stable — it does not change when the iOS
+    // toolbar shows/hides. The section height is therefore stable, wrapper follows,
+    // canvas pixels follow. No zoom on scroll. No JS height lock needed.
     const resize = () => {
-      // wrapper.offsetHeight reads the locked section height — stable vs toolbar changes
       const w = wrapper.offsetWidth
       const h = wrapper.offsetHeight
-      c1.width  = w; c1.height  = h
-      c2.width  = w; c2.height  = h
+      if (w === 0 || h === 0) return
+      c1.width = w; c1.height = h
+      c2.width = w; c2.height = h
       if (bufferRef.current) {
         bufferRef.current.width  = w
         bufferRef.current.height = h
@@ -150,15 +142,6 @@ export default function Hero() {
       }
     }
 
-    // Re-lock + resize only on orientation change (not on toolbar show/hide)
-    const handleOrient = () => {
-      setTimeout(() => {
-        section.style.height = `${window.innerHeight}px`
-        resize()
-      }, 300)
-    }
-    window.addEventListener('orientationchange', handleOrient)
-    // Also handle desktop browser window resize (width changes)
     window.addEventListener('resize', resize)
 
     let canvasReady = false
@@ -196,7 +179,6 @@ export default function Hero() {
     })
 
     return () => {
-      window.removeEventListener('orientationchange', handleOrient)
       window.removeEventListener('resize', resize)
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
@@ -255,10 +237,7 @@ export default function Hero() {
     }
     const onMove = (e: MouseEvent | TouchEvent) => {
       if (!dragging.current) return
-      if ('touches' in e) {
-        e.preventDefault()
-        e.stopPropagation()
-      }
+      if ('touches' in e) { e.preventDefault(); e.stopPropagation() }
       const rect = canvas.getBoundingClientRect()
       const { x, y } = getEventXY(e, rect)
       smear(x, y, lastPos.current.x, lastPos.current.y)
@@ -289,9 +268,19 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      style={{ position: 'relative', height: '100svh', overflow: 'hidden', isolation: 'isolate' }}
+      style={{
+        position:       'relative',
+        display:        'flex',
+        flexDirection:  'column',
+        // min-height: 100svh (small viewport — stable, never changes with toolbar).
+        // The text zone is in-flow at the bottom, so it is ALWAYS visible regardless
+        // of phone model, screen size, or browser chrome height.
+        minHeight:      '100svh',
+        overflow:       'hidden',
+        isolation:      'isolate',
+      }}
     >
-      {/* Canvas stack — scrolls naturally with the page */}
+      {/* Canvas background — absolute, fills the section */}
       <div
         ref={wrapperRef}
         style={{ position: 'absolute', inset: 0, opacity: 0, zIndex: 0, background: '#0A0806' }}
@@ -313,7 +302,7 @@ export default function Hero() {
           position:      'absolute',
           inset:         0,
           zIndex:        1,
-          background:    'linear-gradient(to top, rgba(10,8,6,0.58) 0%, rgba(10,8,6,0.28) 40%, rgba(10,8,6,0.04) 70%, transparent 100%)',
+          background:    'linear-gradient(to top, rgba(10,8,6,0.65) 0%, rgba(10,8,6,0.28) 40%, rgba(10,8,6,0.04) 70%, transparent 100%)',
           pointerEvents: 'none',
         }}
       />
@@ -382,11 +371,19 @@ export default function Hero() {
         →
       </button>
 
-      {/* Text zone */}
+      {/* Flex spacer — pushes text zone to bottom */}
+      <div style={{ flex: 1, minHeight: 0, pointerEvents: 'none' }} />
+
+      {/* Text zone — IN-FLOW (not absolute), always visible on every device */}
       <div
         ref={textRef}
         className="hero-text-zone"
-        style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 2, padding: 'var(--margin-desktop)', maxWidth: '900px' }}
+        style={{
+          position:   'relative',
+          zIndex:     2,
+          padding:    'var(--margin-desktop)',
+          maxWidth:   '900px',
+        }}
       >
         <h1
           style={{
@@ -443,7 +440,7 @@ export default function Hero() {
       <style>{`
         @media (max-width: 768px) {
           .hero-text-zone {
-            padding: var(--margin-mobile) !important;
+            padding: var(--margin-mobile) var(--margin-mobile) calc(var(--margin-mobile) + env(safe-area-inset-bottom, 0px)) var(--margin-mobile) !important;
             max-width: 100% !important;
           }
           .hero-text-zone h1 {
