@@ -22,6 +22,12 @@ const testimonials = [
     author:  'Jana',
     context: 'Kurz samolíčenia',
   },
+  {
+    quote:
+      'Linda mi robila make up a vlasy na svadbu a už na skúške vypočula všetky moje predstavy, pochopila, čo chcem a výsledok bol skvelý. V deň svadby taktiež. Veľmi som ocenila aj to, že prišla priamo k nám domov, takže celé svadobné ráno bolo oveľa pohodovejšie. Popri líčení a robení účesu som sa dokonca príjemne porozprávala. Make up aj účes vydržali počas celého dňa aj noci, takže určite odporúčam 🙂',
+    author:  'Andrea',
+    context: 'Make-up & účes — svadba',
+  },
 ]
 
 export default function Testimonials() {
