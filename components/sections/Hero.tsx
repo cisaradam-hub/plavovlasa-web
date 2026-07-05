@@ -281,7 +281,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      style={{ position: 'relative', minHeight: '100svh', overflow: 'hidden', isolation: 'isolate', WebkitTransform: 'translate3d(0,0,0)', transform: 'translate3d(0,0,0)' }}
+      style={{ position: 'relative', height: '100svh', overflow: 'hidden', isolation: 'isolate' }}
     >
       {/* Canvas stack — canvas1 active, canvas2 transition overlay */}
       <div
