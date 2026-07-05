@@ -126,7 +126,10 @@ export default function Hero() {
     const ctx1 = c1.getContext('2d')
     if (!ctx1) return
 
-    // wrapper is position:fixed — offsetWidth only changes on orientation change
+    // Lock wrapper height to initial viewport height in px.
+    // Prevents any CSS recalculation (svh bugs, toolbar show/hide) from stretching the canvas.
+    wrapper.style.height = `${window.innerHeight}px`
+
     let prevWidth = wrapper.offsetWidth
     const resize = () => {
       const w = wrapper.offsetWidth
@@ -147,6 +150,7 @@ export default function Hero() {
       const newWidth = wrapper.offsetWidth
       if (newWidth === prevWidth) return
       prevWidth = newWidth
+      wrapper.style.height = `${window.innerHeight}px`
       resize()
     }
 
