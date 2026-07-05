@@ -37,7 +37,6 @@ export default function Hero() {
   const textRef       = useRef<HTMLDivElement>(null)
   const wrapperRef    = useRef<HTMLDivElement>(null)
 
-  // Two stacked canvases — canvas1 is active (smear target), canvas2 is transition overlay
   const canvas1Ref    = useRef<HTMLCanvasElement>(null)
   const canvas2Ref    = useRef<HTMLCanvasElement>(null)
   const bufferRef     = useRef<HTMLCanvasElement | null>(null)
@@ -81,17 +80,14 @@ export default function Hero() {
     const ctx2 = c2.getContext('2d')
     if (!ctx2) return
 
-    // Draw next image on overlay canvas2
     ctx2.clearRect(0, 0, c2.width, c2.height)
     drawImageCover(ctx2, nextImg, c2.width, c2.height)
 
-    // Crossfade: canvas2 fades in over canvas1 (no white flash)
     gsap.fromTo(c2, { opacity: 0 }, {
       opacity: 1,
       duration: 0.45,
       ease: 'power2.inOut',
       onComplete: () => {
-        // Commit new image to canvas1 (active smear target)
         const ctx1 = c1.getContext('2d')
         if (ctx1) {
           ctx1.clearRect(0, 0, c1.width, c1.height)
@@ -99,9 +95,7 @@ export default function Hero() {
         }
         if (bufferRef.current) {
           const bCtx = bufferRef.current.getContext('2d')
-          if (bCtx) {
-            bCtx.clearRect(0, 0, bufferRef.current.width, bufferRef.current.height)
-          }
+          if (bCtx) bCtx.clearRect(0, 0, bufferRef.current.width, bufferRef.current.height)
         }
         gsap.set(c2, { opacity: 0 })
         currentIdxRef.current = idx
@@ -122,7 +116,7 @@ export default function Hero() {
     goTo((currentIdxRef.current - 1 + HERO_IMAGES.length) % HERO_IMAGES.length)
   }, [goTo])
 
-  // ── Canvas setup + resize + auto-advance ─────────────────────────────────────
+  // ── Canvas setup + resize ────────────────────────────────────────────────────
   useEffect(() => {
     const c1      = canvas1Ref.current
     const c2      = canvas2Ref.current
@@ -132,6 +126,7 @@ export default function Hero() {
     const ctx1 = c1.getContext('2d')
     if (!ctx1) return
 
+    // wrapper is position:fixed — offsetWidth only changes on orientation change
     let prevWidth = wrapper.offsetWidth
     const resize = () => {
       const w = wrapper.offsetWidth
@@ -150,7 +145,7 @@ export default function Hero() {
     }
     const handleResize = () => {
       const newWidth = wrapper.offsetWidth
-      if (newWidth === prevWidth) return // iOS address bar height change — skip
+      if (newWidth === prevWidth) return
       prevWidth = newWidth
       resize()
     }
@@ -161,7 +156,6 @@ export default function Hero() {
       imagesRef.current[i] = img
 
       const handleLoad = () => {
-        // Set up canvas once on first image to arrive (any index)
         if (!canvasReady) {
           canvasReady = true
           resize()
@@ -172,12 +166,11 @@ export default function Hero() {
           patchRef.current.width  = 80
           patchRef.current.height = 80
         }
-        // Reveal hero only when the currently displayed image (index 0) loads
         if (i === currentIdxRef.current) {
-          const ctx1 = c1.getContext('2d')
-          if (ctx1 && c1.width > 0 && c1.height > 0) {
-            ctx1.clearRect(0, 0, c1.width, c1.height)
-            drawImageCover(ctx1, img, c1.width, c1.height)
+          const ctx1Local = c1.getContext('2d')
+          if (ctx1Local && c1.width > 0 && c1.height > 0) {
+            ctx1Local.clearRect(0, 0, c1.width, c1.height)
+            drawImageCover(ctx1Local, img, c1.width, c1.height)
           }
           gsap.fromTo(wrapper, { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'expo.out' })
         }
@@ -185,7 +178,6 @@ export default function Hero() {
 
       img.onload = handleLoad
       img.src = src
-      // If already cached, onload won't fire — handle manually
       if (img.complete && img.naturalWidth > 0) {
         img.onload = null
         handleLoad()
@@ -225,11 +217,9 @@ export default function Hero() {
 
     bCtx.drawImage(canvas, 0, 0)
 
-    // Draw source area from buffer into small patch canvas
     pCtx.clearRect(0, 0, patch.width, patch.height)
     pCtx.drawImage(buffer, x - half, y - half, patch.width, patch.height, 0, 0, patch.width, patch.height)
 
-    // Feathered circular mask via radial gradient + destination-in
     pCtx.globalCompositeOperation = 'destination-in'
     const grad = pCtx.createRadialGradient(half, half, 0, half, half, radius)
     grad.addColorStop(0,    'rgba(0,0,0,1)')
@@ -240,7 +230,6 @@ export default function Hero() {
     pCtx.fillRect(0, 0, patch.width, patch.height)
     pCtx.globalCompositeOperation = 'source-over'
 
-    // Composite feathered patch onto main canvas at destination
     ctx.drawImage(patch, destX - half, destY - half)
   }, [])
 
@@ -290,12 +279,25 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      style={{ position: 'relative', height: '100svh', overflow: 'hidden', isolation: 'isolate' }}
+      style={{ position: 'relative', height: '100svh' }}
     >
-      {/* Canvas stack — canvas1 active, canvas2 transition overlay */}
+      {/*
+        Canvas wrapper is position:fixed so iOS renders it on its own GPU layer.
+        Fixed elements are never stretched by iOS elastic-scroll physics.
+        z-index: 2 — above the section (z-index: auto) but below overlays (3, 4).
+      */}
       <div
         ref={wrapperRef}
-        style={{ position: 'absolute', inset: 0, opacity: 0, zIndex: 0, background: '#0A0806' }}
+        style={{
+          position:   'fixed',
+          top:        0,
+          left:       0,
+          width:      '100%',
+          height:     '100svh',
+          zIndex:     2,
+          opacity:    0,
+          background: '#0A0806',
+        }}
       >
         <canvas
           ref={canvas1Ref}
@@ -307,13 +309,13 @@ export default function Hero() {
         />
       </div>
 
-      {/* Gradient overlay */}
+      {/* Gradient overlay — z-index 3 (above canvas) */}
       <div
         aria-hidden="true"
         style={{
           position:      'absolute',
           inset:         0,
-          zIndex:        1,
+          zIndex:        3,
           background:    'linear-gradient(to top, rgba(10,8,6,0.58) 0%, rgba(10,8,6,0.28) 40%, rgba(10,8,6,0.04) 70%, transparent 100%)',
           pointerEvents: 'none',
         }}
@@ -329,7 +331,7 @@ export default function Hero() {
           top:            '50%',
           left:           'var(--margin-desktop)',
           transform:      'translateY(-50%)',
-          zIndex:         3,
+          zIndex:         4,
           width:          '44px',
           height:         '44px',
           borderRadius:   '50%',
@@ -361,7 +363,7 @@ export default function Hero() {
           top:            '50%',
           right:          'var(--margin-desktop)',
           transform:      'translateY(-50%)',
-          zIndex:         3,
+          zIndex:         4,
           width:          '44px',
           height:         '44px',
           borderRadius:   '50%',
@@ -383,11 +385,11 @@ export default function Hero() {
         →
       </button>
 
-      {/* Text zone */}
+      {/* Text zone — z-index 3 */}
       <div
         ref={textRef}
         className="hero-text-zone"
-        style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 2, padding: 'var(--margin-desktop)', maxWidth: '900px' }}
+        style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 3, padding: 'var(--margin-desktop)', maxWidth: '900px' }}
       >
         <h1
           style={{
