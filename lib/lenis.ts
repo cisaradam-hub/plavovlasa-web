@@ -11,7 +11,7 @@ export function initLenis(): Lenis {
     lerp: 0.08,
     smoothWheel: true,
     wheelMultiplier: 0.8,
-    touchMultiplier: 1.5,
+    touchMultiplier: 1,
   })
 
   lenis.on('scroll', ScrollTrigger.update)

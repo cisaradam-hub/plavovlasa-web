@@ -126,11 +126,6 @@ export default function Hero() {
     const ctx1 = c1.getContext('2d')
     if (!ctx1) return
 
-    // Lock wrapper height to initial viewport height in px.
-    // Prevents any CSS recalculation (svh bugs, toolbar show/hide) from stretching the canvas.
-    wrapper.style.height = `${window.innerHeight}px`
-
-    let prevWidth = wrapper.offsetWidth
     const resize = () => {
       const w = wrapper.offsetWidth
       const h = wrapper.offsetHeight
@@ -146,13 +141,9 @@ export default function Hero() {
         drawImageCover(ctx1, cur, w, h)
       }
     }
-    const handleResize = () => {
-      const newWidth = wrapper.offsetWidth
-      if (newWidth === prevWidth) return
-      prevWidth = newWidth
-      wrapper.style.height = `${window.innerHeight}px`
-      resize()
-    }
+
+    // Always sync on any resize — prevents CSS/pixel size mismatch that causes stretch
+    window.addEventListener('resize', resize)
 
     let canvasReady = false
     HERO_IMAGES.forEach((src, i) => {
@@ -188,9 +179,8 @@ export default function Hero() {
       }
     })
 
-    window.addEventListener('resize', handleResize)
     return () => {
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', resize)
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
   }, [goTo])
@@ -220,7 +210,6 @@ export default function Hero() {
     const half  = patch.width / 2
 
     bCtx.drawImage(canvas, 0, 0)
-
     pCtx.clearRect(0, 0, patch.width, patch.height)
     pCtx.drawImage(buffer, x - half, y - half, patch.width, patch.height, 0, 0, patch.width, patch.height)
 
@@ -283,25 +272,12 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      style={{ position: 'relative', height: '100svh' }}
+      style={{ position: 'relative', height: '100svh', overflow: 'hidden', isolation: 'isolate' }}
     >
-      {/*
-        Canvas wrapper is position:fixed so iOS renders it on its own GPU layer.
-        Fixed elements are never stretched by iOS elastic-scroll physics.
-        z-index: 2 — above the section (z-index: auto) but below overlays (3, 4).
-      */}
+      {/* Canvas stack — scrolls naturally with the page */}
       <div
         ref={wrapperRef}
-        style={{
-          position:   'fixed',
-          top:        0,
-          left:       0,
-          width:      '100%',
-          height:     '100svh',
-          zIndex:     2,
-          opacity:    0,
-          background: '#0A0806',
-        }}
+        style={{ position: 'absolute', inset: 0, opacity: 0, zIndex: 0, background: '#0A0806' }}
       >
         <canvas
           ref={canvas1Ref}
@@ -313,13 +289,13 @@ export default function Hero() {
         />
       </div>
 
-      {/* Gradient overlay — z-index 3 (above canvas) */}
+      {/* Gradient overlay */}
       <div
         aria-hidden="true"
         style={{
           position:      'absolute',
           inset:         0,
-          zIndex:        3,
+          zIndex:        1,
           background:    'linear-gradient(to top, rgba(10,8,6,0.58) 0%, rgba(10,8,6,0.28) 40%, rgba(10,8,6,0.04) 70%, transparent 100%)',
           pointerEvents: 'none',
         }}
@@ -335,7 +311,7 @@ export default function Hero() {
           top:            '50%',
           left:           'var(--margin-desktop)',
           transform:      'translateY(-50%)',
-          zIndex:         4,
+          zIndex:         3,
           width:          '44px',
           height:         '44px',
           borderRadius:   '50%',
@@ -367,7 +343,7 @@ export default function Hero() {
           top:            '50%',
           right:          'var(--margin-desktop)',
           transform:      'translateY(-50%)',
-          zIndex:         4,
+          zIndex:         3,
           width:          '44px',
           height:         '44px',
           borderRadius:   '50%',
@@ -389,11 +365,11 @@ export default function Hero() {
         →
       </button>
 
-      {/* Text zone — z-index 3 */}
+      {/* Text zone */}
       <div
         ref={textRef}
         className="hero-text-zone"
-        style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 3, padding: 'var(--margin-desktop)', maxWidth: '900px' }}
+        style={{ position: 'absolute', bottom: 0, left: 0, zIndex: 2, padding: 'var(--margin-desktop)', maxWidth: '900px' }}
       >
         <h1
           style={{
