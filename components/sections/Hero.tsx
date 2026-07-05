@@ -170,7 +170,7 @@ export default function Hero() {
           patchRef.current = document.createElement('canvas')
           patchRef.current.width  = 80
           patchRef.current.height = 80
-          gsap.fromTo(wrapper, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.4, ease: 'expo.out', onComplete: () => gsap.set(wrapper, { clearProps: 'transform' }) })
+          gsap.fromTo(wrapper, { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'expo.out' })
         }
       }
 
@@ -281,7 +281,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      style={{ position: 'relative', minHeight: '100svh', overflow: 'hidden', isolation: 'isolate' }}
+      style={{ position: 'relative', minHeight: '100svh', overflow: 'hidden', isolation: 'isolate', WebkitTransform: 'translate3d(0,0,0)', transform: 'translate3d(0,0,0)' }}
     >
       {/* Canvas stack — canvas1 active, canvas2 transition overlay */}
       <div
