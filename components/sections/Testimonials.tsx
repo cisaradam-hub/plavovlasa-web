@@ -3,25 +3,24 @@
 import { useState, useEffect, useRef } from 'react'
 import { revealLines } from '@/lib/animations'
 
-// TODO: nahradiť skutočnými recenziami
 const testimonials = [
   {
     quote:
-      'Plavovlasa mi spravila svadobný make-up presne podľa mojich predstáv. Cítila som sa krásne a prirodzene — celý deň vydržal bez retuše. Odporúčam každej neveste!',
-    author:  '[Meno klientky]',
-    context: 'Svadobný make-up',
+      'Maximálna spokojnosť! Veľmi milý a profesionálny prístup, všetko prebiehalo v príjemnej a uvoľnenej atmosfére. Dokonale vystihnuté, čo som chcela – líčenie aj účes vyzerali nádherne, prirodzene a všetko vydržalo bezchybne celý deň a noc. Určite odporúčam!',
+    author:  'Alexandra',
+    context: 'Make-up & účes',
   },
   {
     quote:
-      'Kurz samolíčenia mi otvoril oči. Za tri hodiny som sa naučila viac ako za celý život pokusov doma. Konečne viem, čo mi pristane a ako to dosiahnuť.',
-    author:  '[Meno klientky]',
+      'Linda vie na žene nájsť to najkrajšie a zvýrazniť to tak, ako by si to sama doma nedokázala. Tak krásne spravenú pleťovku, obočie a pery som ešte nemala, ten odtieň, ktorý pre mňa našla, bol dokonalý! Navyše — makeup vydržal krásne celý večer.',
+    author:  'Vanda',
+    context: 'Make-up',
+  },
+  {
+    quote:
+      'Absolvovala som u Lindy kurz samolíčenia a bolo to úplne skvelé – nielenže ma naučila super triky priamo pre moju tvár, ale pri káve a výbornom pokeci to ubehlo ako s kamoškou, pričom som odchádzala s obrovskou dávkou sebavedomia. :)',
+    author:  'Jana',
     context: 'Kurz samolíčenia',
-  },
-  {
-    quote:
-      'Profesionalita, jemnosť a úžasné výsledky. Vlasy aj make-up vyzerali presne ako z módneho časopisu. Budem sa vracať znova a znova.',
-    author:  '[Meno klientky]',
-    context: 'Make-up & vlasy',
   },
 ]
 
