@@ -85,6 +85,7 @@ export default function Pricing() {
             <div key={i}>
               {/* Riadok: názov ·········· cena */}
               <div
+                className="price-row"
                 style={{
                   display:     'flex',
                   alignItems:  'baseline',
@@ -94,6 +95,7 @@ export default function Pricing() {
               >
                 {/* Názov služby */}
                 <span
+                  className="price-service"
                   style={{
                     fontFamily:  'var(--font-serif)',
                     fontSize:    'var(--text-subheading)',
@@ -108,6 +110,7 @@ export default function Pricing() {
 
                 {/* Bodkovaná čiara */}
                 <span
+                  className="price-dots"
                   aria-hidden="true"
                   style={{
                     flex:              1,
@@ -124,6 +127,7 @@ export default function Pricing() {
 
                 {/* Cena */}
                 <span
+                  className="price-val"
                   style={{
                     fontFamily:  'var(--font-serif)',
                     fontSize:    'var(--text-subheading)',
@@ -214,9 +218,16 @@ export default function Pricing() {
           #cennik > div {
             padding: 0 var(--margin-mobile) !important;
           }
-          #cennik span[style*="white-space: nowrap"]:first-child {
-            white-space: normal !important;
+          .price-row {
+            flex-wrap: wrap;
+            gap: 2px !important;
           }
+          .price-service {
+            white-space: normal !important;
+            flex-basis: 100%;
+          }
+          .price-dots { display: none; }
+          .price-val  { padding-bottom: 4px; }
         }
       `}</style>
     </section>
