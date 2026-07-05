@@ -121,12 +121,20 @@ export default function Hero() {
     const c1      = canvas1Ref.current
     const c2      = canvas2Ref.current
     const wrapper = wrapperRef.current
-    if (!c1 || !c2 || !wrapper) return
+    const section = sectionRef.current
+    if (!c1 || !c2 || !wrapper || !section) return
 
     const ctx1 = c1.getContext('2d')
     if (!ctx1) return
 
+    // Lock section height to initial window.innerHeight.
+    // iOS toolbar show/hide changes window.innerHeight, which would resize the canvas
+    // (via the 100% CSS chain) and cause the image to appear zoomed. By locking
+    // to a pixel value, the height stays stable during scroll.
+    section.style.height = `${window.innerHeight}px`
+
     const resize = () => {
+      // wrapper.offsetHeight reads the locked section height — stable vs toolbar changes
       const w = wrapper.offsetWidth
       const h = wrapper.offsetHeight
       c1.width  = w; c1.height  = h
@@ -142,7 +150,15 @@ export default function Hero() {
       }
     }
 
-    // Always sync on any resize — prevents CSS/pixel size mismatch that causes stretch
+    // Re-lock + resize only on orientation change (not on toolbar show/hide)
+    const handleOrient = () => {
+      setTimeout(() => {
+        section.style.height = `${window.innerHeight}px`
+        resize()
+      }, 300)
+    }
+    window.addEventListener('orientationchange', handleOrient)
+    // Also handle desktop browser window resize (width changes)
     window.addEventListener('resize', resize)
 
     let canvasReady = false
@@ -180,6 +196,7 @@ export default function Hero() {
     })
 
     return () => {
+      window.removeEventListener('orientationchange', handleOrient)
       window.removeEventListener('resize', resize)
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
