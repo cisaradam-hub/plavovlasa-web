@@ -132,6 +132,7 @@ export default function Hero() {
     const ctx1 = c1.getContext('2d')
     if (!ctx1) return
 
+    let prevWidth = wrapper.offsetWidth
     const resize = () => {
       const w = wrapper.offsetWidth
       const h = wrapper.offsetHeight
@@ -146,6 +147,12 @@ export default function Hero() {
         ctx1.clearRect(0, 0, w, h)
         drawImageCover(ctx1, cur, w, h)
       }
+    }
+    const handleResize = () => {
+      const newWidth = wrapper.offsetWidth
+      if (newWidth === prevWidth) return // iOS address bar height change — skip
+      prevWidth = newWidth
+      resize()
     }
 
     let loadedCount = 0
@@ -163,7 +170,7 @@ export default function Hero() {
           patchRef.current = document.createElement('canvas')
           patchRef.current.width  = 80
           patchRef.current.height = 80
-          gsap.fromTo(wrapper, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.4, ease: 'expo.out' })
+          gsap.fromTo(wrapper, { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: 1.4, ease: 'expo.out', onComplete: () => gsap.set(wrapper, { clearProps: 'transform' }) })
         }
       }
 
@@ -176,9 +183,9 @@ export default function Hero() {
       }
     })
 
-    window.addEventListener('resize', resize)
+    window.addEventListener('resize', handleResize)
     return () => {
-      window.removeEventListener('resize', resize)
+      window.removeEventListener('resize', handleResize)
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
   }, [goTo])
