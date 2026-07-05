@@ -24,7 +24,7 @@ const testimonials = [
   },
   {
     quote:
-      'Linda mi robila make up a vlasy na svadbu a už na skúške vypočula všetky moje predstavy, pochopila, čo chcem a výsledok bol skvelý. V deň svadby taktiež. Veľmi som ocenila aj to, že prišla priamo k nám domov, takže celé svadobné ráno bolo oveľa pohodovejšie. Popri líčení a robení účesu som sa dokonca príjemne porozprávala. Make up aj účes vydržali počas celého dňa aj noci, takže určite odporúčam.',
+      'Linda mi robila make-up a vlasy na svadbu. Už na skúške vypočula všetky moje predstavy a výsledok bol skvelý — v deň svadby taktiež. Veľmi som ocenila, že prišla priamo k nám domov, čo celé svadobné ráno spríjemnilo. Make-up aj účes vydržali celý deň aj noc. Určite odporúčam.',
     author:  'Andrea',
     context: 'Make-up & účes — svadba',
   },
