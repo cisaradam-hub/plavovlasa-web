@@ -19,7 +19,7 @@ const services = [
     label: '02',
     title: 'Vlasy',
     description:
-      'Štylizácia a úprava vlasov pre každú príležitosť. Svadobné účesy, spoločenské línie aj každodenný styling.',
+      'Štylizácia a úprava vlasov pre každú príležitosť. Svadobné účesy, spoločenské účesy aj každodenný styling.',
     image: '/images/service-hair.jpg',
     imageAlt: 'Vlasový styling',
   },
