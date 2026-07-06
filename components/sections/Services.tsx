@@ -10,7 +10,7 @@ const services = [
     label: '01',
     title: 'Make-up',
     description:
-      'Profesionálny líčenie prispôsobené vašej príležitosti — od jemného denného lookooku po výrazný večerný alebo svadobný make-up.',
+      'Profesionálne líčenie prispôsobené vašej príležitosti — od jemného denného looku po výrazný večerný alebo svadobný make-up.',
     image: '/images/service-makeup.jpg',
     imageAlt: 'Make-up služba',
   },
