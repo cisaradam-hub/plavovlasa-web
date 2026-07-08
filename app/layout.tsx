@@ -64,7 +64,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${dmSans.variable} ${spaceMono.variable} ${geistMono.variable}`}>
+    <html lang="sk" className={`${dmSans.variable} ${spaceMono.variable} ${geistMono.variable}`}>
       <body>
         <GrainOverlay />
         <CustomCursor />
