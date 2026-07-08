@@ -79,6 +79,9 @@ const jsonLd = {
 }
 
 export const metadata: Metadata = {
+  verification: {
+    google: 'google63d4b1c3556ea521',
+  },
   title: 'plavovlasa.sk – makeup · vlasy · kurzy líčenia',
   description: 'Keď sa cítiš dobre, je to vidieť.',
   icons: {
