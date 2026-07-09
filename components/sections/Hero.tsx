@@ -330,6 +330,7 @@ export default function Hero() {
       {/* Smear hint */}
       <div
         ref={hintRef}
+        className="smear-hint"
         style={{
           position:      'absolute',
           top:           '58%',
@@ -504,6 +505,7 @@ export default function Hero() {
           animation: smear-pulse 2.2s ease-in-out infinite;
         }
         @media (max-width: 768px) {
+          .smear-hint { top: 50% !important; }
           .hero-text-zone {
             padding: var(--margin-mobile) var(--margin-mobile) calc(var(--margin-mobile) + env(safe-area-inset-bottom, 0px)) var(--margin-mobile) !important;
             max-width: 100% !important;
