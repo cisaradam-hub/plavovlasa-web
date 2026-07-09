@@ -50,6 +50,9 @@ export default function Hero() {
   const dragging  = useRef(false)
   const lastPos   = useRef({ x: 0, y: 0 })
 
+  const hintRef          = useRef<HTMLDivElement>(null)
+  const hintDismissedRef = useRef(false)
+
   // ── Text animations ──────────────────────────────────────────────────────────
   useEffect(() => {
     const seen  = sessionStorage.getItem('preloader-seen')
@@ -166,7 +169,20 @@ export default function Hero() {
             ctx1Local.clearRect(0, 0, c1.width, c1.height)
             drawImageCover(ctx1Local, img, c1.width, c1.height)
           }
-          gsap.fromTo(wrapper, { opacity: 0 }, { opacity: 1, duration: 1.4, ease: 'expo.out' })
+          gsap.fromTo(wrapper, { opacity: 0 }, {
+            opacity: 1, duration: 1.4, ease: 'expo.out',
+            onComplete: () => {
+              if (hintRef.current && !hintDismissedRef.current) {
+                gsap.fromTo(hintRef.current, { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.3, ease: 'expo.out' })
+                setTimeout(() => {
+                  if (!hintDismissedRef.current && hintRef.current) {
+                    hintDismissedRef.current = true
+                    gsap.to(hintRef.current, { opacity: 0, duration: 0.6, ease: 'expo.out' })
+                  }
+                }, 7000)
+              }
+            },
+          })
         }
       }
 
@@ -242,6 +258,10 @@ export default function Hero() {
       const { x, y } = getEventXY(e, rect)
       smear(x, y, lastPos.current.x, lastPos.current.y)
       lastPos.current = { x, y }
+      if (!hintDismissedRef.current && hintRef.current) {
+        hintDismissedRef.current = true
+        gsap.to(hintRef.current, { opacity: 0, y: -4, scale: 0.9, duration: 0.3, ease: 'expo.out' })
+      }
     }
     const onUp = () => { dragging.current = false }
 
@@ -306,6 +326,44 @@ export default function Hero() {
           pointerEvents: 'none',
         }}
       />
+
+      {/* Smear hint */}
+      <div
+        ref={hintRef}
+        style={{
+          position:      'absolute',
+          top:           '38%',
+          left:          '50%',
+          transform:     'translate(-50%, -50%)',
+          zIndex:        2,
+          display:       'flex',
+          flexDirection: 'column',
+          alignItems:    'center',
+          gap:           '10px',
+          pointerEvents: 'none',
+          opacity:       0,
+        }}
+      >
+        <div className="smear-hint-icon">
+          <svg width="52" height="26" viewBox="0 0 52 26" fill="none">
+            <path d="M10 13H4M4 13L8 9M4 13L8 17" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
+            <circle cx="26" cy="13" r="8" fill="white" opacity="0.12"/>
+            <circle cx="26" cy="13" r="4" fill="white" opacity="0.9"/>
+            <path d="M42 13H48M48 13L44 9M48 13L44 17" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.7"/>
+          </svg>
+        </div>
+        <span style={{
+          fontFamily:    'var(--font-mono)',
+          fontSize:      '10px',
+          letterSpacing: '0.12em',
+          textTransform: 'uppercase',
+          color:         'rgba(255,255,255,0.75)',
+          textShadow:    '0 1px 6px rgba(0,0,0,0.7)',
+          whiteSpace:    'nowrap',
+        }}>
+          Potiahnite po tvári
+        </span>
+      </div>
 
       {/* Slideshow arrows — left */}
       <button
@@ -438,6 +496,13 @@ export default function Hero() {
       </div>
 
       <style>{`
+        @keyframes smear-pulse {
+          0%, 100% { transform: scale(1);    opacity: 1; }
+          50%       { transform: scale(1.25); opacity: 0.7; }
+        }
+        .smear-hint-icon {
+          animation: smear-pulse 2.2s ease-in-out infinite;
+        }
         @media (max-width: 768px) {
           .hero-text-zone {
             padding: var(--margin-mobile) var(--margin-mobile) calc(var(--margin-mobile) + env(safe-area-inset-bottom, 0px)) var(--margin-mobile) !important;
