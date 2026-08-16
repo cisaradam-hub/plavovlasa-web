@@ -155,12 +155,12 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
 
       <style>{`
         .portfolio-masonry {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: var(--gutter);
-          align-items: start;
+          column-count: 3;
+          column-gap: var(--gutter);
         }
         .portfolio-item {
+          break-inside: avoid;
+          margin-bottom: var(--gutter);
           cursor: zoom-in;
           opacity: 0;
         }
@@ -172,8 +172,11 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
             padding: 0 var(--margin-mobile) !important;
           }
           .portfolio-masonry {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            column-count: 2;
+            column-gap: 8px;
+          }
+          .portfolio-item {
+            margin-bottom: 8px;
           }
         }
       `}</style>
