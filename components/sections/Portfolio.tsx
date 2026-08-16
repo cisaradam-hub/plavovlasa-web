@@ -172,8 +172,7 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
             padding: 0 var(--margin-mobile) !important;
           }
           .portfolio-masonry {
-            column-count: 2;
-            column-gap: 8px;
+            column-count: 1;
           }
           .portfolio-item {
             margin-bottom: 8px;
