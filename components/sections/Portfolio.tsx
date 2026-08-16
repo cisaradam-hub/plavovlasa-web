@@ -12,9 +12,18 @@ if (typeof window !== 'undefined') {
 }
 
 export default function Portfolio({ images = [] }: { images?: string[] }) {
-  const col1 = images.filter((_, i) => i % 3 === 0)
-  const col2 = images.filter((_, i) => i % 3 === 1)
-  const col3 = images.filter((_, i) => i % 3 === 2)
+  const [cols, setCols] = useState(3)
+
+  useEffect(() => {
+    const update = () => setCols(window.innerWidth <= 768 ? 2 : 3)
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
+  const col1 = images.filter((_, i) => i % cols === 0)
+  const col2 = images.filter((_, i) => i % cols === 1)
+  const col3 = cols === 3 ? images.filter((_, i) => i % cols === 2) : []
 
   const headingRef = useRef<HTMLDivElement>(null)
   const imgRefs    = useRef<HTMLDivElement[]>([])
@@ -22,12 +31,9 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
   const [lightbox, setLightbox] = useState<number | null>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
 
-  // Map from column index back to original images[] index
   const colToOriginal = useCallback((colIndex: number, itemIndex: number) => {
-    if (colIndex === 0) return itemIndex * 3
-    if (colIndex === 1) return itemIndex * 3 + 1
-    return itemIndex * 3 + 2
-  }, [])
+    return itemIndex * cols + colIndex
+  }, [cols])
 
   const open = useCallback((idx: number) => {
     setLightbox(idx)
@@ -133,7 +139,7 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
         <div className="masonry-grid">
           {renderCol(col1, 0, 0)}
           {renderCol(col2, 1, col1.length)}
-          {renderCol(col3, 2, col1.length + col2.length)}
+          {cols === 3 && renderCol(col3, 2, col1.length + col2.length)}
         </div>
       </div>
 
@@ -279,9 +285,6 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
           align-items: flex-start;
         }
         @media (max-width: 768px) {
-          .masonry-grid > div:last-child {
-            display: none;
-          }
           #portfolio > div {
             padding: 0 var(--margin-mobile) !important;
           }
