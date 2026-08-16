@@ -73,17 +73,19 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
               className="portfolio-item"
               onClick={() => open(i)}
             >
-              <Image
-                src={src}
-                alt={`Portfólio ${i + 1}`}
-                width={600}
-                height={800}
-                sizes="(max-width: 768px) 50vw, 33vw"
-                quality={82}
-                style={{ width: '100%', height: 'auto', display: 'block', transition: 'transform 0.4s ease' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.03)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = '' }}
-              />
+              <div className="portfolio-item-inner">
+                <Image
+                  src={src}
+                  alt={`Portfólio ${i + 1}`}
+                  width={600}
+                  height={800}
+                  sizes="(max-width: 768px) 50vw, 33vw"
+                  quality={82}
+                  style={{ width: '100%', height: 'auto', display: 'block', transition: 'transform 0.4s ease' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLImageElement).style.transform = 'scale(1.03)' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLImageElement).style.transform = '' }}
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -153,26 +155,25 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
 
       <style>{`
         .portfolio-masonry {
-          column-count: 3;
-          column-gap: var(--gutter);
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: var(--gutter);
+          align-items: start;
         }
         .portfolio-item {
-          break-inside: avoid;
-          margin-bottom: var(--gutter);
-          overflow: hidden;
           cursor: zoom-in;
           opacity: 0;
+        }
+        .portfolio-item-inner {
+          overflow: hidden;
         }
         @media (max-width: 768px) {
           #portfolio > div {
             padding: 0 var(--margin-mobile) !important;
           }
           .portfolio-masonry {
-            column-count: 2;
-            column-gap: 8px;
-          }
-          .portfolio-item {
-            margin-bottom: 8px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
           }
         }
       `}</style>
