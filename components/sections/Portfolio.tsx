@@ -76,7 +76,7 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
               <div className="portfolio-item-inner">
                 <Image
                   src={src}
-                  alt={`Portfólio ${i + 1}`}
+                  alt={`Make-up práca ${i + 1} — Linda Cisárová Plavovlasa, make-up artistka Bratislava`}
                   width={600}
                   height={800}
                   sizes="(max-width: 768px) 50vw, 33vw"
@@ -112,7 +112,7 @@ export default function Portfolio({ images = [] }: { images?: string[] }) {
             <Image
               key={lightbox}
               src={images[lightbox]}
-              alt={`Portfólio ${lightbox + 1}`}
+              alt={`Make-up práca ${lightbox + 1} — Linda Cisárová Plavovlasa, make-up artistka Bratislava`}
               width={1200}
               height={1600}
               quality={92}

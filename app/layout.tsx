@@ -36,16 +36,22 @@ const jsonLd = {
   telephone: '+421911557032',
   email: 'hello@plavovlasa.sk',
   image: 'https://www.plavovlasa.sk/images/og-image.png',
-  description: 'Make-up artistka Linda Cisárová (Plavovlasa) — profesionálne líčenie, vlasový styling a kurzy samolíčenia v Bratislave.',
+  description: 'Make-up artistka Linda Cisárová (Plavovlasa) — profesionálne líčenie, vlasový styling a kurzy samolíčenia. Výjazdy po celej Bratislave vrátane Petrzalky.',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Bratislava',
+    addressRegion: 'Petrzalka',
     addressCountry: 'SK',
   },
-  areaServed: {
-    '@type': 'City',
-    name: 'Bratislava',
-  },
+  areaServed: [
+    { '@type': 'City', name: 'Bratislava' },
+    { '@type': 'AdministrativeArea', name: 'Petrzalka' },
+    { '@type': 'AdministrativeArea', name: 'Rusovce' },
+    { '@type': 'AdministrativeArea', name: 'Jarovce' },
+    { '@type': 'AdministrativeArea', name: 'Čunovo' },
+  ],
+  sameAs: ['https://www.instagram.com/plavovlasa.makeup/'],
+  priceRange: '€€',
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
     name: 'Služby',
@@ -82,16 +88,16 @@ export const metadata: Metadata = {
   verification: {
     google: 'GmFAQMzGIm0IT6mm7UwOvdTwZrllBgLmlwDNRQicqaU',
   },
-  title: 'plavovlasa.sk – makeup · vlasy · kurzy líčenia',
-  description: 'Keď sa cítiš dobre, je to vidieť.',
+  title: 'Plavovlasa – Make-up Artist Bratislava | makeup · vlasy · kurzy líčenia',
+  description: 'Certifikovaná make-up artistka v Bratislave (Petrzalka). Svadobné líčenie, módny make-up, vlasový styling a kurzy samolíčenia. Výjazdy po celej Bratislave.',
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',
     apple: '/icon.svg',
   },
   openGraph: {
-    title:       'plavovlasa.sk – makeup · vlasy · kurzy líčenia',
-    description: 'Keď sa cítiš dobre, je to vidieť.',
+    title:       'Plavovlasa – Make-up Artist Bratislava | makeup · vlasy · kurzy líčenia',
+    description: 'Certifikovaná make-up artistka v Bratislave (Petrzalka). Svadobné líčenie, módny make-up, vlasový styling a kurzy samolíčenia. Výjazdy po celej Bratislave.',
     url:         'https://www.plavovlasa.sk',
     siteName:    'plavovlasa.sk',
     images: [
@@ -107,8 +113,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card:        'summary_large_image',
-    title:       'plavovlasa.sk – makeup · vlasy · kurzy líčenia',
-    description: 'Keď sa cítiš dobre, je to vidieť.',
+    title:       'Plavovlasa – Make-up Artist Bratislava | makeup · vlasy · kurzy líčenia',
+    description: 'Certifikovaná make-up artistka v Bratislave (Petrzalka). Svadobné líčenie, módny make-up, vlasový styling a kurzy samolíčenia. Výjazdy po celej Bratislave.',
     images:      ['/images/og-image.png'],
   },
 }
