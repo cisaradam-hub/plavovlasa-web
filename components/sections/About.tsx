@@ -82,7 +82,7 @@ export default function About() {
             Volám sa Linda a som certifikovaná makeup artistka (STUDIO22) pôsobiaca
             v Bratislave – Petrzalke. Venujem sa svadobnému, módnemu aj filmovému líčeniu —
             a rovnako rada odovzdávam svoje skúsenosti ďalej, na vlastných kurzoch líčenia.
-            Robím výjazdy po celej Bratislave a okolí.
+            Robím výjazdy po celej Bratislave aj mimo nej.
           </p>
 
           <p

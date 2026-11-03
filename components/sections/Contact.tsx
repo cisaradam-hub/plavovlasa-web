@@ -56,8 +56,8 @@ export default function Contact() {
             className="body-text"
             style={{ color: 'rgba(245,242,236,0.55)', maxWidth: '38ch' }}
           >
-            {/* TODO: doplniť skutočný text */}
-            Rada si vypočujem vašu víziu a nájdeme spolu riešenie šité na mieru.
+            Pôsobím v Bratislave, výjazdy robím po celom meste aj mimo neho.
+            Napíšte mi — rada si vypočujem vašu víziu a nájdeme spolu riešenie šité na mieru.
           </p>
         </div>
 
